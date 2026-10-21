@@ -100,37 +100,59 @@ dateDebut.addEventListener("input", function(){
     validerDate(dateUtilisateur);
 })
 
-ajouter.addEventListener("click", function () {
+function ajouterparticipants(){
     const liste = document.createElement("li");
     const input = document.createElement("input");
-
+    const buttonR = document.createElement("button");
+  
     input.type = "text";
     input.name = "participants";
     input.placeholder = "Prénom du participant";
 
+
+    buttonR.textContent  = "Retirer";
+    buttonR.type = "button";
+
+    buttonR.addEventListener("click", function(){
+        if (listeParticipants.querySelectorAll("input").length <= 3){
+            errorParticipant.textContent = "vous devez gardez au moins trois participants!";
+            errorParticipant.classList.remove("hidden");
+            return ;
+        }
+        liste.remove();
+        if (!validerPrenom){
+            return;
+        }
+
+        participantsCompteur.textContent =
+    listeParticipants.querySelectorAll("input").length + " participants"; 
+    });
+
+    liste.appendChild(buttonR);
     liste.appendChild(input);
     listeParticipants.appendChild(liste);
-    participantsCompteur.textContent =
-    listeParticipants.querySelectorAll("input").length + " participant";
-});
 
-function validerParticipants(){
-    const nombreParticipants = listeParticipants.querySelectorAll("input").length;
+    participantsCompteur.textContent =
+    listeParticipants.querySelectorAll("input").length + " participants";
+}
+ajouterparticipants();
+ajouterparticipants();
+ajouterparticipants();
+
+ajouter.addEventListener("click", function () {
+    if(listeParticipants.querySelectorAll("input").length >=20){
+        errorParticipant.textContent = "vous ne pouvez pas dépasser 20participants!";
+        errorParticipant.classList.remove("hidden");
+        return;
+    }
+    ajouterparticipants();
+})
+
+    function validerPrenom(){
     const inputs = listeParticipants.querySelectorAll("input");
     const prenomRegex = /^[\p{L}\p{M}]+(?:['-][\p{L}\p{M}]+)*$/u;
     const nomsVus = new Set();
 
-
-    if (nombreParticipants <2){
-        errorParticipant.textContent = "veuillez ajouter plus de participants!";
-        errorParticipant.classList.remove("hidden");
-        return false;
-    }
-    else  if (nombreParticipants > 20){
-        errorParticipant.textContent = "Vous ne pouvez pas dépasser 20 participants!";
-        errorParticipant.classList.remove("hidden");
-        return false;
-    }
     for (const input of inputs){
         const prenom = input.value.trim();
         if (prenom === ""){
@@ -154,28 +176,27 @@ function validerParticipants(){
             input.focus();
             return false;
         
-    }
-    if (!prenomRegex.test(prenom)){
+        }
+        if (!prenomRegex.test(prenom)){
         errorParticipant.textContent = "le nom ne doit pas contenire des caracteres invalides";
         errorParticipant.classList.remove("hidden");
         input.focus();
         return false;
-    }
-    const prenomNormalise = prenom.toLowerCase();
-    if (nomsVus.has(prenomNormalise)){
+        }
+        const prenomNormalise = prenom.toLowerCase();
+        if (nomsVus.has(prenomNormalise)){
         errorParticipant.textContent = "ce nom existe deja";
         errorParticipant.classList.remove("hidden");
         input.focus();
         return false;
+        }
+        nomsVus.add(prenomNormalise);
     }
-    nomsVus.add(prenomNormalise);
-}
-
+    
     errorParticipant.textContent = "";
     errorParticipant.classList.add("hidden");
     return true;
 }
-    
 
 
 form.addEventListener("submit", function (event) {
