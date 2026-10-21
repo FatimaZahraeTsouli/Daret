@@ -144,8 +144,13 @@ ajouter.addEventListener("click", function () {
         errorParticipant.textContent = "vous ne pouvez pas dépasser 20participants!";
         errorParticipant.classList.remove("hidden");
         return;
+    } 
+    else if (!validerPrenom()){
+        return;
     }
+
     ajouterparticipants();
+    
 })
 
     function validerPrenom(){
