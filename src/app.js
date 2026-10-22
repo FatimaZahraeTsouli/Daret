@@ -19,7 +19,7 @@ const generer = document.getElementById("generer");
 const nomRegex = /^[\p{L}\p{M}0-9 -]+$/u ;
 const aujourdHui = new Date().toISOString().slice(0, 10);
 
-
+// FUNCTION VALIDER NOM
 
 function validerNom(nom) {
     if (nom.length < 2 ) {
@@ -48,6 +48,8 @@ nomCercle.addEventListener("input", function () {
     const nom = nomCercle.value.trim();
     validerNom(nom);
 });
+
+// FUNCTION VALIDER COTISATION
 
 function validerCotisation(montant){
 
@@ -81,6 +83,9 @@ Cotisation.addEventListener("input", function(){
     validerCotisation(montant);
 })
 
+// FUNCTION VALIDER DATE 
+
+
 function validerDate(dateUtilisateur){
 
     if (dateUtilisateur < aujourdHui){
@@ -99,6 +104,9 @@ dateDebut.addEventListener("input", function(){
     const dateUtilisateur = dateDebut.value;
     validerDate(dateUtilisateur);
 })
+
+// FUNCTION AJOUTER PARTICIPANTS 
+
 
 function ajouterparticipants(){
     const liste = document.createElement("li");
@@ -120,7 +128,7 @@ function ajouterparticipants(){
             return ;
         }
         liste.remove();
-        if (!validerPrenom){
+        if (!validerPrenom()){
             return;
         }
 
@@ -139,6 +147,8 @@ ajouterparticipants();
 ajouterparticipants();
 ajouterparticipants();
 
+
+
 ajouter.addEventListener("click", function () {
     if(listeParticipants.querySelectorAll("input").length >=20){
         errorParticipant.textContent = "vous ne pouvez pas dépasser 20participants!";
@@ -152,6 +162,8 @@ ajouter.addEventListener("click", function () {
     ajouterparticipants();
     
 })
+
+// FUNCTION VALIDER PRENOM 
 
     function validerPrenom(){
     const inputs = listeParticipants.querySelectorAll("input");
@@ -204,6 +216,9 @@ ajouter.addEventListener("click", function () {
 }
 
 
+// button generer 
+
+
 form.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -215,8 +230,7 @@ form.addEventListener("submit", function (event) {
 
     const dateUtilisateur = dateDebut.value;
     const dateValide = validerDate(dateUtilisateur);
-
-    const participantsValide = validerParticipants();
+    const participantsValide = validerPrenom();
 
     if (!nomValide) {
         nomCercle.focus();
@@ -235,5 +249,79 @@ form.addEventListener("submit", function (event) {
         ajouter.focus();
         return;
     }
+    const data = {
+        nomCercle: document.querySelector("#nom-cercle").value.trim(),
+        Cotisation: document.querySelector("#cotisation").value,
+        dateDebut: document.querySelector("#date-debut").value,
+        periodicite: document.querySelector("#periodicite").value,
+        nbparticipants: Array.from(
+            listeParticipants.querySelectorAll("input"),
+            input => input.value.trim()
+        )}
+
+        localStorage.setItem("cercle",JSON.stringify(data))
+console.log("total recu par beneficiaire est : " +montantRecu());
+
+// NOMBRE DE TOUR 
+
+const nbparticipants = listeParticipants.querySelectorAll("input").length;
+const nombreTours = nbparticipants;
+console.log("nombres de tours est : " + nombreTours);
+
+console.log("le total versée par chaque participants est : " + totalVerse());
+
+// date premier tour 
+const dateptour1 = dateDebut.value;
+const dateptour2 = dateptour1.split('-').reverse().join('/');
+console.log("la date du premier tour est : " + dateptour2 + " la date du dernier tour est : " + dateDTour().toLocaleDateString("fr-FR"));
 
 });
+
+// MONTANT RECU PAR BENEFICIAIRE  EXECUTE
+
+function montantRecu(){
+    const nbparticipants = listeParticipants.querySelectorAll("input").length;
+    const montant1 = (JSON.parse(localStorage.getItem("cercle")).Cotisation);
+    return  nbparticipants * montant1;
+}
+
+// TOTAL VERSE  EXECUTE
+
+function totalVerse () {
+    const nbparticipants = listeParticipants.querySelectorAll("input").length;
+    const nombreTours = nbparticipants;
+    const montant1 = (JSON.parse(localStorage.getItem("cercle")).Cotisation);
+    return montant1 * nombreTours
+}
+
+//  DATE DE Dernier TOUR    hebdomadaire  quinzaine  mensuelle
+
+function dateDTour(){
+    if (periodicite.value == "hebdomadaire"){
+    const dateptour3 = new Date(dateDebut.value);
+    const nbparticipants = listeParticipants.querySelectorAll("input").length;
+    const nombreTours = nbparticipants; 
+
+    dateptour3.setDate(dateptour3.getDate() + nombreTours);
+    return dateptour3
+    }
+
+    else if (periodicite.value == "quinzaine"){
+    const dateptour3 = new Date(dateDebut.value);
+    const nbparticipants = listeParticipants.querySelectorAll("input").length;
+    const nombreTours = nbparticipants; 
+
+    dateptour3.setDate(dateptour3.getDate() + nombreTours * 15);
+    return dateptour3  
+    }
+    
+    else if (periodicite.value == "mensuelle"){
+    const dateptour3 = new Date(dateDebut.value);
+    const nbparticipants = listeParticipants.querySelectorAll("input").length;
+    const nombreTours = nbparticipants; 
+
+    dateptour3.setMonth(dateptour3.getMonth() + nombreTours );
+    return dateptour3    
+    }
+}
+
