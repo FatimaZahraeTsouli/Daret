@@ -18,6 +18,12 @@ const participantsCompteur = document.getElementById("participants-compteur");
 const generer = document.getElementById("generer");
 const nomRegex = /^[\p{L}\p{M}0-9 -]+$/u ;
 const aujourdHui = new Date().toISOString().slice(0, 10);
+const resumerecu = document.getElementById("resume-cagnotte");
+const resumetotalverse = document.getElementById("resume-total-cycle");
+const resumetours = document.getElementById("resume-nb-tours");
+const resumedate = document.getElementById("resume-dates");
+const resume = document.getElementById("contenu-resultat");
+const calendrier = document.getElementById("calendrier")
 
 // FUNCTION VALIDER NOM
 
@@ -218,7 +224,7 @@ ajouter.addEventListener("click", function () {
 
 // button generer 
 
-
+resume.classList.remove("hidden");
 form.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -260,20 +266,24 @@ form.addEventListener("submit", function (event) {
         )}
 
         localStorage.setItem("cercle",JSON.stringify(data))
-console.log("total recu par beneficiaire est : " +montantRecu());
+
+    montantRecu();
+    totalVerse ();
+    dateDTour();
+
 
 // NOMBRE DE TOUR 
 
 const nbparticipants = listeParticipants.querySelectorAll("input").length;
 const nombreTours = nbparticipants;
-console.log("nombres de tours est : " + nombreTours);
+resumetours.textContent = nombreTours
 
-console.log("le total versée par chaque participants est : " + totalVerse());
+// console.log("le total versée par chaque participants est : " + totalVerse());
 
 // date premier tour 
 const dateptour1 = dateDebut.value;
 const dateptour2 = dateptour1.split('-').reverse().join('/');
-console.log("la date du premier tour est : " + dateptour2 + " la date du dernier tour est : " + dateDTour().toLocaleDateString("fr-FR"));
+resumedate.textContent = new Date(dateptour2).toLocaleDateString("fr-FR") + "-" + dateDTour().toLocaleDateString("fr-FR");
 
 });
 
@@ -282,7 +292,7 @@ console.log("la date du premier tour est : " + dateptour2 + " la date du dernier
 function montantRecu(){
     const nbparticipants = listeParticipants.querySelectorAll("input").length;
     const montant1 = (JSON.parse(localStorage.getItem("cercle")).Cotisation);
-    return  nbparticipants * montant1;
+    resumerecu.textContent = nbparticipants * montant1;
 }
 
 // TOTAL VERSE  EXECUTE
@@ -291,7 +301,7 @@ function totalVerse () {
     const nbparticipants = listeParticipants.querySelectorAll("input").length;
     const nombreTours = nbparticipants;
     const montant1 = (JSON.parse(localStorage.getItem("cercle")).Cotisation);
-    return montant1 * nombreTours
+    resumetotalverse.textContent = montant1 * nombreTours
 }
 
 //  DATE DE Dernier TOUR    hebdomadaire  quinzaine  mensuelle
@@ -302,7 +312,7 @@ function dateDTour(){
     const nbparticipants = listeParticipants.querySelectorAll("input").length;
     const nombreTours = nbparticipants; 
 
-    dateptour3.setDate(dateptour3.getDate() + nombreTours);
+    dateptour3.setDate(dateptour3.getDate() + nombreTours * 7);
     return dateptour3
     }
 
@@ -321,7 +331,7 @@ function dateDTour(){
     const nombreTours = nbparticipants; 
 
     dateptour3.setMonth(dateptour3.getMonth() + nombreTours );
-    return dateptour3    
+    return dateptour3   
     }
 }
 
