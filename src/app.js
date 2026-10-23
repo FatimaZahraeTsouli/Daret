@@ -16,29 +16,30 @@ const listeParticipants = document.getElementById("participants-liste");
 const errorParticipant = document.getElementById("participants-erreur");
 const participantsCompteur = document.getElementById("participants-compteur");
 const generer = document.getElementById("generer");
-const nomRegex = /^[\p{L}\p{M}0-9 -]+$/u ;
+const nomRegex = /^[\p{L}\p{M}0-9 -]+$/u;
 const aujourdHui = new Date().toISOString().slice(0, 10);
 const resumerecu = document.getElementById("resume-cagnotte");
 const resumetotalverse = document.getElementById("resume-total-cycle");
 const resumetours = document.getElementById("resume-nb-tours");
 const resumedate = document.getElementById("resume-dates");
 const resume = document.getElementById("contenu-resultat");
-const calendrier = document.getElementById("calendrier")
+const calendrier = document.getElementById("calendrier");
+const calendriercorps = document.getElementById("calendrier-corps");
 
 // FUNCTION VALIDER NOM
 
 function validerNom(nom) {
-    if (nom.length < 2 ) {
+    if (nom.length < 2) {
         errorNom.textContent = "Le nom est trés court!";
         errorNom.classList.remove("hidden");
         nomCercle.setAttribute("aria-invalid", "true");
         return false;
-    } else if (nom.length > 40){
+    } else if (nom.length > 40) {
         errorNom.textContent = "Le nom est trés long!";
         errorNom.classList.remove("hidden");
         nomCercle.setAttribute("aria-invalid", "true");
         return false;
-    } else if (!nomRegex.test(nom)){
+    } else if (!nomRegex.test(nom)) {
         errorNom.textContent = "Le nom contient des caractéres non autorisés!";
         errorNom.classList.remove("hidden");
         nomCercle.setAttribute("aria-invalid", "true");
@@ -57,21 +58,21 @@ nomCercle.addEventListener("input", function () {
 
 // FUNCTION VALIDER COTISATION
 
-function validerCotisation(montant){
+function validerCotisation(montant) {
 
     if (!Number.isInteger(montant)) {
         errorCotisation.textContent = "La cotisation doit être un nombre entier.";
         Cotisation.setAttribute("aria-invalid", "true");
         errorCotisation.classList.remove("hidden");
-    return false;
+        return false;
     }
-    else if (montant < 100){
+    else if (montant < 100) {
         errorCotisation.textContent = "la cotisation doit être au minimum de 100 MAD!";
         Cotisation.setAttribute("aria-invalid", "true");
         errorCotisation.classList.remove("hidden");
         return false
     }
-    else if (montant > 50000){
+    else if (montant > 50000) {
         errorCotisation.textContent = "la cotisation ne doit pas dépasser 50000 MAD!";
         Cotisation.setAttribute("aria-invalid", "true");
         errorCotisation.classList.remove("hidden");
@@ -84,7 +85,7 @@ function validerCotisation(montant){
     return true;
 
 }
-Cotisation.addEventListener("input", function(){
+Cotisation.addEventListener("input", function () {
     const montant = Number(Cotisation.value);
     validerCotisation(montant);
 })
@@ -92,9 +93,9 @@ Cotisation.addEventListener("input", function(){
 // FUNCTION VALIDER DATE 
 
 
-function validerDate(dateUtilisateur){
+function validerDate(dateUtilisateur) {
 
-    if (dateUtilisateur < aujourdHui){
+    if (dateUtilisateur < aujourdHui) {
         errorDate.textContent = "veuillez choisir une date valable!";
         dateDebut.setAttribute("aria-invalid", "true");
         errorDate.classList.remove("hidden");
@@ -106,7 +107,7 @@ function validerDate(dateUtilisateur){
     return true;
 }
 
-dateDebut.addEventListener("input", function(){
+dateDebut.addEventListener("input", function () {
     const dateUtilisateur = dateDebut.value;
     validerDate(dateUtilisateur);
 })
@@ -114,32 +115,32 @@ dateDebut.addEventListener("input", function(){
 // FUNCTION AJOUTER PARTICIPANTS 
 
 
-function ajouterparticipants(){
+function ajouterparticipants() {
     const liste = document.createElement("li");
     const input = document.createElement("input");
     const buttonR = document.createElement("button");
-  
+
     input.type = "text";
     input.name = "participants";
     input.placeholder = "Prénom du participant";
 
 
-    buttonR.textContent  = "Retirer";
+    buttonR.textContent = "Retirer";
     buttonR.type = "button";
 
-    buttonR.addEventListener("click", function(){
-        if (listeParticipants.querySelectorAll("input").length <= 3){
+    buttonR.addEventListener("click", function () {
+        if (listeParticipants.querySelectorAll("input").length <= 3) {
             errorParticipant.textContent = "vous devez gardez au moins trois participants!";
             errorParticipant.classList.remove("hidden");
-            return ;
+            return;
         }
         liste.remove();
-        if (!validerPrenom()){
+        if (!validerPrenom()) {
             return;
         }
 
         participantsCompteur.textContent =
-    listeParticipants.querySelectorAll("input").length + " participants"; 
+            listeParticipants.querySelectorAll("input").length + " participants";
     });
 
     liste.appendChild(buttonR);
@@ -147,7 +148,7 @@ function ajouterparticipants(){
     listeParticipants.appendChild(liste);
 
     participantsCompteur.textContent =
-    listeParticipants.querySelectorAll("input").length + " participants";
+        listeParticipants.querySelectorAll("input").length + " participants";
 }
 ajouterparticipants();
 ajouterparticipants();
@@ -156,66 +157,66 @@ ajouterparticipants();
 
 
 ajouter.addEventListener("click", function () {
-    if(listeParticipants.querySelectorAll("input").length >=20){
+    if (listeParticipants.querySelectorAll("input").length >= 20) {
         errorParticipant.textContent = "vous ne pouvez pas dépasser 20participants!";
         errorParticipant.classList.remove("hidden");
         return;
-    } 
-    else if (!validerPrenom()){
+    }
+    else if (!validerPrenom()) {
         return;
     }
 
     ajouterparticipants();
-    
+
 })
 
 // FUNCTION VALIDER PRENOM 
 
-    function validerPrenom(){
+function validerPrenom() {
     const inputs = listeParticipants.querySelectorAll("input");
     const prenomRegex = /^[\p{L}\p{M}]+(?:['-][\p{L}\p{M}]+)*$/u;
     const nomsVus = new Set();
 
-    for (const input of inputs){
+    for (const input of inputs) {
         const prenom = input.value.trim();
-        if (prenom === ""){
+        if (prenom === "") {
             errorParticipant.textContent = "veuillez remplire ce champ!";
             errorParticipant.classList.remove("hidden");
             input.setAttribute("aria-invalid", "true");
             input.focus();
             return false;
         }
-        if (prenom.length < 2){
+        if (prenom.length < 2) {
             errorParticipant.textContent = "le nom doit contenir au moins trois caracteres!";
             errorParticipant.classList.remove("hidden");
             input.setAttribute("aria-invalid", "true");
             input.focus();
             return false;
         }
-        if (prenom.length > 30){
+        if (prenom.length > 30) {
             errorParticipant.textContent = "le nom ne doit pas dépasser trente caracteres!";
             errorParticipant.classList.remove("hidden");
             input.setAttribute("aria-invalid", "true");
             input.focus();
             return false;
-        
+
         }
-        if (!prenomRegex.test(prenom)){
-        errorParticipant.textContent = "le nom ne doit pas contenire des caracteres invalides";
-        errorParticipant.classList.remove("hidden");
-        input.focus();
-        return false;
+        if (!prenomRegex.test(prenom)) {
+            errorParticipant.textContent = "le nom ne doit pas contenire des caracteres invalides";
+            errorParticipant.classList.remove("hidden");
+            input.focus();
+            return false;
         }
         const prenomNormalise = prenom.toLowerCase();
-        if (nomsVus.has(prenomNormalise)){
-        errorParticipant.textContent = "ce nom existe deja";
-        errorParticipant.classList.remove("hidden");
-        input.focus();
-        return false;
+        if (nomsVus.has(prenomNormalise)) {
+            errorParticipant.textContent = "ce nom existe deja";
+            errorParticipant.classList.remove("hidden");
+            input.focus();
+            return false;
         }
         nomsVus.add(prenomNormalise);
     }
-    
+
     errorParticipant.textContent = "";
     errorParticipant.classList.add("hidden");
     return true;
@@ -247,11 +248,11 @@ form.addEventListener("submit", function (event) {
         Cotisation.focus();
         return;
     }
-    if (!dateValide){
+    if (!dateValide) {
         dateDebut.focus();
         return;
     }
-    if (!participantsValide){
+    if (!participantsValide) {
         ajouter.focus();
         return;
     }
@@ -263,33 +264,77 @@ form.addEventListener("submit", function (event) {
         nbparticipants: Array.from(
             listeParticipants.querySelectorAll("input"),
             input => input.value.trim()
-        )}
+        )
+    }
 
-        localStorage.setItem("cercle",JSON.stringify(data))
+    localStorage.setItem("cercle", JSON.stringify(data))
 
     montantRecu();
-    totalVerse ();
+    totalVerse();
     dateDTour();
 
 
-// NOMBRE DE TOUR 
+    // NOMBRE DE TOUR 
 
-const nbparticipants = listeParticipants.querySelectorAll("input").length;
-const nombreTours = nbparticipants;
-resumetours.textContent = nombreTours
+    const nbparticipants = listeParticipants.querySelectorAll("input").length;
+    const nombreTours = nbparticipants;
+    resumetours.textContent = nombreTours
 
-// console.log("le total versée par chaque participants est : " + totalVerse());
 
-// date premier tour 
-const dateptour1 = dateDebut.value;
-const dateptour2 = dateptour1.split('-').reverse().join('/');
-resumedate.textContent = new Date(dateptour2).toLocaleDateString("fr-FR") + "-" + dateDTour().toLocaleDateString("fr-FR");
+    // date premier tour 
+    const dateptour1 = dateDebut.value;
+    resumedate.textContent = new Date(dateptour1).toLocaleDateString("fr-FR") + "-" + dateDTour().toLocaleDateString("fr-FR");
+
+    for (let i = 1; i <= nombreTours; i++) {
+
+        // FUNCTION ID EXECUTE
+
+        const ligne = document.createElement("tr");
+        const celluleID = document.createElement("td");
+        const celluleDATE = document.createElement("td");
+        ligne.appendChild(celluleID);
+        ligne.appendChild(celluleDATE);
+        calendriercorps.appendChild(ligne);
+
+        function ajouterid() {
+            celluleID.textContent = i;
+
+        }
+        ajouterid();
+
+// FUNCTION TOUR EXECUTE 
+
+        function datetour() {
+            if (periodicite.value == "hebdomadaire") {
+                const premiertour = new Date(dateDebut.value);
+                premiertour.setDate(premiertour.getDate() + ((i - 1) * 7));
+                celluleDATE.textContent = premiertour.toLocaleDateString("fr-FR");
+                
+            }
+            else if (periodicite.value == "quinzaine"){
+                const premiertour = new Date(dateDebut.value);
+                premiertour.setDate(premiertour.getDate() + ((i - 1) * 15));
+                celluleDATE.textContent = premiertour.toLocaleDateString("fr-FR");
+            }
+            else if (periodicite.value == "mensuelle"){
+                const premiertour = new Date(dateDebut.value);
+                premiertour.setMonth(premiertour.getMonth() + ((i - 1)));
+                celluleDATE.textContent = premiertour.toLocaleDateString("fr-FR");
+            }
+        }
+        datetour();
+
+
+
+    }
+
+
 
 });
 
 // MONTANT RECU PAR BENEFICIAIRE  EXECUTE
 
-function montantRecu(){
+function montantRecu() {
     const nbparticipants = listeParticipants.querySelectorAll("input").length;
     const montant1 = (JSON.parse(localStorage.getItem("cercle")).Cotisation);
     resumerecu.textContent = nbparticipants * montant1;
@@ -297,7 +342,7 @@ function montantRecu(){
 
 // TOTAL VERSE  EXECUTE
 
-function totalVerse () {
+function totalVerse() {
     const nbparticipants = listeParticipants.querySelectorAll("input").length;
     const nombreTours = nbparticipants;
     const montant1 = (JSON.parse(localStorage.getItem("cercle")).Cotisation);
@@ -306,32 +351,34 @@ function totalVerse () {
 
 //  DATE DE Dernier TOUR    hebdomadaire  quinzaine  mensuelle
 
-function dateDTour(){
-    if (periodicite.value == "hebdomadaire"){
-    const dateptour3 = new Date(dateDebut.value);
-    const nbparticipants = listeParticipants.querySelectorAll("input").length;
-    const nombreTours = nbparticipants; 
+function dateDTour() {
+    if (periodicite.value == "hebdomadaire") {
+        const dateptour3 = new Date(dateDebut.value);
+        const nbparticipants = listeParticipants.querySelectorAll("input").length;
+        const nombreTours = nbparticipants;
 
-    dateptour3.setDate(dateptour3.getDate() + nombreTours * 7);
-    return dateptour3
+        dateptour3.setDate(dateptour3.getDate() + nombreTours * 7);
+        return dateptour3
     }
 
-    else if (periodicite.value == "quinzaine"){
-    const dateptour3 = new Date(dateDebut.value);
-    const nbparticipants = listeParticipants.querySelectorAll("input").length;
-    const nombreTours = nbparticipants; 
+    else if (periodicite.value == "quinzaine") {
+        const dateptour3 = new Date(dateDebut.value);
+        const nbparticipants = listeParticipants.querySelectorAll("input").length;
+        const nombreTours = nbparticipants;
 
-    dateptour3.setDate(dateptour3.getDate() + nombreTours * 15);
-    return dateptour3  
+        dateptour3.setDate(dateptour3.getDate() + nombreTours * 15);
+        return dateptour3
     }
-    
-    else if (periodicite.value == "mensuelle"){
-    const dateptour3 = new Date(dateDebut.value);
-    const nbparticipants = listeParticipants.querySelectorAll("input").length;
-    const nombreTours = nbparticipants; 
 
-    dateptour3.setMonth(dateptour3.getMonth() + nombreTours );
-    return dateptour3   
+    else if (periodicite.value == "mensuelle") {
+        const dateptour3 = new Date(dateDebut.value);
+        const nbparticipants = listeParticipants.querySelectorAll("input").length;
+        const nombreTours = nbparticipants;
+
+        dateptour3.setMonth(dateptour3.getMonth() + nombreTours);
+        return dateptour3
     }
 }
+
+
 
