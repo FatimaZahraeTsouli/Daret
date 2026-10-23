@@ -127,6 +127,10 @@ function ajouterparticipants() {
 
     buttonR.textContent = "Retirer";
     buttonR.type = "button";
+    buttonR.style.backgroundColor = "black";
+    buttonR.style.color = "white";
+    buttonR.style.padding = "5px 10px";
+    buttonR.style.borderRadius = "8px";
 
     buttonR.addEventListener("click", function () {
         if (listeParticipants.querySelectorAll("input").length <= 3) {
@@ -226,8 +230,10 @@ function validerPrenom() {
 // button generer 
 
 resume.classList.remove("hidden");
+
 form.addEventListener("submit", function (event) {
     event.preventDefault();
+    calendriercorps.replaceChildren();
 
     const nom = nomCercle.value.trim();
     const nomValide = validerNom(nom);
@@ -285,47 +291,69 @@ form.addEventListener("submit", function (event) {
     const dateptour1 = dateDebut.value;
     resumedate.textContent = new Date(dateptour1).toLocaleDateString("fr-FR") + "-" + dateDTour().toLocaleDateString("fr-FR");
 
-    for (let i = 1; i <= nombreTours; i++) {
+    for (let i =1; i <= nombreTours; i++) {
 
-        // FUNCTION ID EXECUTE
-
+        
         const ligne = document.createElement("tr");
         const celluleID = document.createElement("td");
         const celluleDATE = document.createElement("td");
+        const celluleBANEFICIAIRE = document.createElement("td");
+        const cellulemontantrecu = document.createElement("td")
         ligne.appendChild(celluleID);
         ligne.appendChild(celluleDATE);
+        ligne.appendChild(celluleBANEFICIAIRE);
+        ligne.appendChild(cellulemontantrecu);
         calendriercorps.appendChild(ligne);
+
+        // FUNCTION ID EXECUTE
 
         function ajouterid() {
             celluleID.textContent = i;
-
         }
         ajouterid();
 
-// FUNCTION TOUR EXECUTE 
+// FUNCTION DATE TOUR EXECUTE 
 
         function datetour() {
             if (periodicite.value == "hebdomadaire") {
                 const premiertour = new Date(dateDebut.value);
                 premiertour.setDate(premiertour.getDate() + ((i - 1) * 7));
-                celluleDATE.textContent = premiertour.toLocaleDateString("fr-FR");
+                celluleDATE.textContent = premiertour.toLocaleDateString("fr-FR", {day: "numeric" , month: "long" , year: "numeric"});
                 
             }
             else if (periodicite.value == "quinzaine"){
                 const premiertour = new Date(dateDebut.value);
                 premiertour.setDate(premiertour.getDate() + ((i - 1) * 15));
-                celluleDATE.textContent = premiertour.toLocaleDateString("fr-FR");
+                celluleDATE.textContent = premiertour.toLocaleDateString("fr-FR" ,{day: "numeric" , month: "long" , year: "numeric"});
             }
             else if (periodicite.value == "mensuelle"){
                 const premiertour = new Date(dateDebut.value);
                 premiertour.setMonth(premiertour.getMonth() + ((i - 1)));
-                celluleDATE.textContent = premiertour.toLocaleDateString("fr-FR");
+                celluleDATE.textContent = premiertour.toLocaleDateString("fr-FR" ,{day: "numeric" , month: "long" , year: "numeric"});
             }
         }
         datetour();
 
+// FUNCTION BENEFICIAIRE 
+
+        function beneficiaire(){
+            const listeParticipants = document.getElementById("participants-liste");
+            const inputs = listeParticipants.querySelectorAll("input");
+                const beneficiaire = inputs[i -1].value;
+                celluleBANEFICIAIRE.textContent = beneficiaire
+        }
+        beneficiaire()
 
 
+        // FUNCTION MONTANT RECU 
+
+        function calendriermontant() {
+            const nbparticipants = listeParticipants.querySelectorAll("input").length;
+            const montant1 = (JSON.parse(localStorage.getItem("cercle")).Cotisation);
+            resumerecu.textContent = nbparticipants * montant1; 
+            cellulemontantrecu.textContent = nbparticipants * montant1 + " DH";
+        }
+        calendriermontant()
     }
 
 
@@ -357,7 +385,7 @@ function dateDTour() {
         const nbparticipants = listeParticipants.querySelectorAll("input").length;
         const nombreTours = nbparticipants;
 
-        dateptour3.setDate(dateptour3.getDate() + nombreTours * 7);
+        dateptour3.setDate(dateptour3.getDate() + (nombreTours - 1) * 7);
         return dateptour3
     }
 
@@ -366,7 +394,7 @@ function dateDTour() {
         const nbparticipants = listeParticipants.querySelectorAll("input").length;
         const nombreTours = nbparticipants;
 
-        dateptour3.setDate(dateptour3.getDate() + nombreTours * 15);
+        dateptour3.setDate(dateptour3.getDate() + (nombreTours - 1) * 15);
         return dateptour3
     }
 
@@ -375,7 +403,7 @@ function dateDTour() {
         const nbparticipants = listeParticipants.querySelectorAll("input").length;
         const nombreTours = nbparticipants;
 
-        dateptour3.setMonth(dateptour3.getMonth() + nombreTours);
+        dateptour3.setMonth(dateptour3.getMonth() + nombreTours - 1);
         return dateptour3
     }
 }
