@@ -6,8 +6,8 @@ _À compléter par toi : remplace cette introduction par la description de **ton
 
 ## Liens
 
-- Site (GitHub Pages) : _à compléter_
-- Tableau GitHub Projects : _à compléter_
+- Site (GitHub Pages) : https://fatimazahraetsouli.github.io/Daret/
+- Tableau GitHub Projects : https://github.com/users/FatimaZahraeTsouli/projects/4
 - Maquette Figma : _à compléter_
 
 ## Installation
