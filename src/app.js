@@ -25,6 +25,8 @@ const resumedate = document.getElementById("resume-dates");
 const resume = document.getElementById("contenu-resultat");
 const calendrier = document.getElementById("calendrier");
 const calendriercorps = document.getElementById("calendrier-corps");
+const ordredesaisie = document.getElementById("ordre-saisie");
+const tirrageausort = document.getElementById("tirage-au-sort");
 
 // FUNCTION VALIDER NOM
 
@@ -407,6 +409,3 @@ function dateDTour() {
         return dateptour3
     }
 }
-
-
-
