@@ -337,14 +337,17 @@ form.addEventListener("submit", function (event) {
         datetour();
 
 // FUNCTION BENEFICIAIRE 
+// FUNCTION ORDRE DE SAISIE 
 
-        function beneficiaire(){
-            const listeParticipants = document.getElementById("participants-liste");
-            const inputs = listeParticipants.querySelectorAll("input");
+        ordredesaisie.addEventListener("click", function(){
+            function beneficiaire(){
+                const listeParticipants = document.getElementById("participants-liste");
+                const inputs = listeParticipants.querySelectorAll("input");
                 const beneficiaire = inputs[i -1].value;
                 celluleBANEFICIAIRE.textContent = beneficiaire
-        }
-        beneficiaire()
+            }
+            beneficiaire()
+        })
 
 
         // FUNCTION MONTANT RECU 
@@ -357,7 +360,6 @@ form.addEventListener("submit", function (event) {
         }
         calendriermontant()
     }
-
 
 
 });
