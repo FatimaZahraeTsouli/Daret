@@ -27,7 +27,7 @@ const calendrier = document.getElementById("calendrier");
 const calendriercorps = document.getElementById("calendrier-corps");
 const ordredesaisie = document.getElementById("ordre-saisie");
 const tirrageausort = document.getElementById("tirage-au-sort");
-
+const compteurtours = document.getElementById("compteur-tours");
 // FUNCTION VALIDER NOM
 
 function validerNom(nom) {
@@ -300,12 +300,21 @@ form.addEventListener("submit", function (event) {
         const celluleID = document.createElement("td");
         const celluleDATE = document.createElement("td");
         const celluleBANEFICIAIRE = document.createElement("td");
-        const cellulemontantrecu = document.createElement("td")
+        const cellulemontantrecu = document.createElement("td");
+        const cellulestatut = document.createElement("td") 
+        const buttonstatut = document.createElement("button");
         ligne.appendChild(celluleID);
         ligne.appendChild(celluleDATE);
         ligne.appendChild(celluleBANEFICIAIRE);
         ligne.appendChild(cellulemontantrecu);
+        ligne.appendChild(cellulestatut);
+        ligne.appendChild(buttonstatut);
         calendriercorps.appendChild(ligne);
+
+        cellulestatut.textContent = "A Venir";
+        cellulestatut.classList.add("statut-tour");
+        buttonstatut.textContent = "Marquer comme terminée";
+        buttonstatut.type = "button";
 
         // FUNCTION ID EXECUTE
 
@@ -339,7 +348,7 @@ form.addEventListener("submit", function (event) {
 // FUNCTION BENEFICIAIRE 
 // FUNCTION ORDRE DE SAISIE 
 
-        ordredesaisie.addEventListener("click", function(){
+    ordredesaisie.addEventListener("click", function(){
             function beneficiaire(){
                 const listeParticipants = document.getElementById("participants-liste");
                 const inputs = listeParticipants.querySelectorAll("input");
@@ -348,6 +357,33 @@ form.addEventListener("submit", function (event) {
             }
             beneficiaire()
         })
+
+// FUNCTION tirrage au sort non execute
+
+    // const listeParticipants = document.getElementById("participants-liste");
+    // const inputs = listeParticipants.querySelectorAll("input");
+    // // let tableau = Array.from(inputs).map(input => input.value.trim());
+    // tirrageausort.addEventListener("click", function(){
+    //     function beneficiaireausort(){
+    //             let tableau = Array.from(inputs).map(input => input.value.trim());
+    //             const listeParticipants = document.getElementById("participants-liste");
+    //             const inputs = listeParticipants.querySelectorAll("input");  
+    //             const index = Math.floor(Math.random() * tableau.length);
+    //             const noms = tableau[index]
+    //             celluleBANEFICIAIRE.textContent = noms
+    //             tableau.splice(index , 1)
+    
+    //         }
+    //         beneficiaireausort()
+
+    //     })
+
+
+
+
+
+
+
 
 
         // FUNCTION MONTANT RECU 
@@ -362,7 +398,43 @@ form.addEventListener("submit", function (event) {
     }
 
 
+
+
+
+
 });
+
+calendriercorps.addEventListener("click", function(event) {
+    const boutonClique = event.target.closest("button");
+
+    if (!boutonClique || !calendriercorps.contains(boutonClique)) {
+        return;
+    }
+    const ligne = boutonClique.closest("tr");
+    let statut = ligne.querySelector(".statut-tour"); 
+    if(statut.textContent === "A Venir"){
+    statut.textContent = "Terminé";
+    boutonClique.textContent = "Annuler";
+    }
+    else if (statut.textContent == "Terminé"){
+        statut.textContent = "A Venir";
+        boutonClique.textContent = "Marquer comme Terminé";
+    }
+    let compteurstatut = 0
+    const statuts = calendriercorps.querySelectorAll(".statut-tour");
+    statuts.forEach(function(statut) { 
+    if (statut.textContent == "Terminé"){
+        compteurstatut++;
+    }
+    });
+    compteurtours.textContent = compteurstatut + " est terminée sur " + statuts.length ;
+});
+
+
+                
+
+
+
 
 // MONTANT RECU PAR BENEFICIAIRE  EXECUTE
 
